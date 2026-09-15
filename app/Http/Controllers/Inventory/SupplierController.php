@@ -4,8 +4,8 @@ namespace App\Http\Controllers\Inventory;
 
 use App\Http\Controllers\Controller;
 use App\Models\Supplier;
-use Illuminate\Http\Request;
-use Illuminate\Validation\Rule;
+use App\Http\Requests\StoreSupplierRequest;
+use App\Http\Requests\UpdateSupplierRequest;
 
 class SupplierController extends Controller
 {
@@ -19,17 +19,9 @@ class SupplierController extends Controller
         ]);
     }
 
-    public function store(Request $request)
+    public function store(StoreSupplierRequest $request)
     {
-        $validated = $request->validate([
-            'name' => ['required', 'string', 'max:255'],
-            'contact_info' => [
-                'required',
-                'string',
-                'max:255',
-                'unique:suppliers,contact_info',
-            ],
-        ]);
+        $validated = $request->validated();
 
         $supplier = Supplier::create($validated);
 
@@ -46,18 +38,9 @@ class SupplierController extends Controller
         ]);
     }
 
-    public function update(Request $request, Supplier $supplier)
+    public function update(UpdateSupplierRequest $request, Supplier $supplier)
     {
-        $validated = $request->validate([
-            'name' => ['required', 'string', 'max:255'],
-            'contact_info' => [
-                'required',
-                'string',
-                'max:255',
-                Rule::unique('suppliers', 'contact_info')
-                    ->ignore($supplier->id),
-            ],
-        ]);
+        $validated = $request->validated();
 
         $supplier->update($validated);
 
