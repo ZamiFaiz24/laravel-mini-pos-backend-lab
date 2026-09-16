@@ -7,18 +7,18 @@ use Illuminate\Database\Eloquent\Model;
 class Sale extends Model
 {
     protected $fillable = [
-        'product_id',
+        'user_id',
         'total_amount',
         'status',
     ];
 
-    public function products()
+    public function user()
     {
-        return $this->belongsTo(Product::class);
+        return $this->belongsTo(User::class);
     }
 
-    public function salesItems()
+    public function items()
     {
-        return $this->hasMany(SalesItem::class, 'sale_id');
+        return $this->hasMany(SaleItem::class);
     }
 }

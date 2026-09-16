@@ -47,4 +47,14 @@ class User extends Authenticatable
             'role' => 'string',
         ];
     }
+
+    public function sales()
+    {
+        return $this->hasMany(Sale::class);
+    }
+
+    public function stockMovements()
+    {
+        return $this->hasMany(StockMovement::class, 'created_by');
+    }
 }
