@@ -18,7 +18,7 @@ class UpdateProductRequest extends FormRequest
 
         return [
             'category_id' => ['required', 'integer', 'exists:categories,id'],
-            'supplier_id' => ['required', 'integer', 'exists:suppliers,id'],
+            'supplier_id' => ['nullable', 'integer', 'exists:suppliers,id'],
             'sku' => [
                 'required',
                 'string',
