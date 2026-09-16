@@ -6,17 +6,18 @@ use App\Http\Controllers\Controller;
 use App\Models\Supplier;
 use App\Http\Requests\StoreSupplierRequest;
 use App\Http\Requests\UpdateSupplierRequest;
+use App\Http\Resources\SupplierResource;
 
 class SupplierController extends Controller
 {
     public function index()
     {
-        return response()->json([
-            'data' => Supplier::query()
-                ->withCount('products')
-                ->latest()
-                ->get(),
-        ]);
+        $suppliers = Supplier::query()
+            ->withCount('products')
+            ->latest()
+            ->get();
+
+        return SupplierResource::collection($suppliers);
     }
 
     public function store(StoreSupplierRequest $request)
@@ -27,15 +28,15 @@ class SupplierController extends Controller
 
         return response()->json([
             'message' => 'Supplier created successfully.',
-            'data' => $supplier,
+            'data' => new SupplierResource($supplier),
         ], 201);
     }
 
     public function show(Supplier $supplier)
     {
-        return response()->json([
-            'data' => $supplier->load('products'),
-        ]);
+        return new SupplierResource(
+            $supplier->loadCount('products')
+        );
     }
 
     public function update(UpdateSupplierRequest $request, Supplier $supplier)
@@ -46,7 +47,7 @@ class SupplierController extends Controller
 
         return response()->json([
             'message' => 'Supplier updated successfully.',
-            'data' => $supplier->fresh(),
+            'data' => new SupplierResource($supplier->fresh()),
         ]);
     }
 

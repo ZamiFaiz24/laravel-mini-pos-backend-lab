@@ -6,16 +6,18 @@ use App\Http\Controllers\Controller;
 use App\Models\Category;
 use App\Http\Requests\StoreCategoryRequest;
 use App\Http\Requests\UpdateCategoryRequest;
+use App\Http\Resources\CategoryResource;
 
 class CategoryController extends Controller
 {
     public function index()
     {
-        return response()->json([
-            'data' => Category::query()
+        return CategoryResource::collection(
+            Category::query()
+                ->withCount('products')
                 ->latest()
-                ->get(),
-        ]);
+                ->get()
+        );
     }
 
     public function store(StoreCategoryRequest $request)
@@ -32,9 +34,7 @@ class CategoryController extends Controller
 
     public function show(Category $category)
     {
-        return response()->json([
-            'data' => $category,
-        ]);
+        return new CategoryResource($category);
     }
 
     public function update(UpdateCategoryRequest $request, Category $category)

@@ -6,17 +6,18 @@ use App\Http\Controllers\Controller;
 use App\Models\Product;
 use App\Http\Requests\StoreProductRequest;
 use App\Http\Requests\UpdateProductRequest;
+use App\Http\Resources\ProductResource;
 
 class ProductController extends Controller
 {
     public function index()
     {
-        return response()->json([
-            'data' => Product::query()
-                ->with(['category', 'supplier'])
-                ->latest()
-                ->get(),
-        ]);
+        $products = Product::query()
+            ->with(['category', 'supplier'])
+            ->latest()
+            ->get();
+
+        return ProductResource::collection($products);
     }
 
     public function store(StoreProductRequest $request)
@@ -27,15 +28,15 @@ class ProductController extends Controller
 
         return response()->json([
             'message' => 'Product created successfully.',
-            'data' => $product->load(['category', 'supplier']),
+            'data' => new ProductResource($product->load(['category', 'supplier'])),
         ], 201);
     }
 
     public function show(Product $product)
     {
-        return response()->json([
-            'data' => $product->load(['category', 'supplier']),
-        ]);
+        return new ProductResource(
+            $product->load(['category', 'supplier'])
+        );
     }
 
     public function update(UpdateProductRequest $request, Product $product)
@@ -46,7 +47,7 @@ class ProductController extends Controller
 
         return response()->json([
             'message' => 'Product updated successfully.',
-            'data' => $product->fresh()->load(['category', 'supplier']),
+            'data' => new ProductResource($product->fresh()->load(['category', 'supplier'])),
         ]);
     }
 
