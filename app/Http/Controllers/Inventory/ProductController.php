@@ -19,11 +19,8 @@ class ProductController extends Controller
             'supplier_id' => ['nullable', 'integer', 'exists:suppliers,id'],
             'per_page' => ['nullable', 'integer', 'min:1', 'max:100'],
         ]);
-        
-        $perPage = min(
-            max((int) $request->query('per_page', 10), 1),
-            100
-        );
+
+        $perPage = $request->integer('per_page', 10);
 
         $products = Product::query()
             ->with(['category', 'supplier'])

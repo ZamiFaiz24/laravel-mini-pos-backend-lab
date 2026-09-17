@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\UserResource;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -20,15 +21,15 @@ class ApiAuthController extends Controller
 
         if (! $user || ! Hash::check($credentials['password'], $user->password)) {
             return response()->json([
-                'message' => 'Email atau password salah.',
+                'message' => 'Invalid email or password.',
             ], 401);
         }
 
         $token = $user->createToken('api-token')->plainTextToken;
 
         return response()->json([
-            'message' => 'Login berhasil.',
-            'user' => $user,
+            'message' => 'Login successful.',
+            'user' => new UserResource($user),
             'token' => $token,
         ]);
     }
@@ -38,7 +39,7 @@ class ApiAuthController extends Controller
         $request->user()->currentAccessToken()->delete();
 
         return response()->json([
-            'message' => 'Logout berhasil.',
+            'message' => 'Logout successful.',
         ]);
     }
 }
