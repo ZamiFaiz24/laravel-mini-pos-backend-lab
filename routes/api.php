@@ -5,14 +5,18 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Inventory\CategoryController;
 use App\Http\Controllers\Inventory\ProductController;
 use App\Http\Controllers\Inventory\SupplierController;
+use App\Http\Controllers\Auth\ApiAuthController;
 
-Route::get('/user', function (Request $request) {
-    return $request->user();
-})->middleware('auth:sanctum');
+Route::post('/login', [ApiAuthController::class, 'login']);
 
+Route::middleware('auth:sanctum')->group(function () {
+    Route::post('/logout', [ApiAuthController::class, 'logout']);
 
-Route::apiResource('categories', CategoryController::class);
+    Route::get('/user', function (Request $request) {
+        return $request->user();
+    });
 
-Route::apiResource('products', ProductController::class);
-
-Route::apiResource('suppliers', SupplierController::class);
+    Route::apiResource('categories', CategoryController::class);
+    Route::apiResource('products', ProductController::class);
+    Route::apiResource('suppliers', SupplierController::class);
+});
