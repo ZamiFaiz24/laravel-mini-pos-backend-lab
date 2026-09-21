@@ -4,8 +4,9 @@ use App\Http\Controllers\Auth\ApiAuthController;
 use App\Http\Controllers\Inventory\CategoryController;
 use App\Http\Controllers\Inventory\ProductController;
 use App\Http\Controllers\Inventory\SupplierController;
-use App\Http\Controllers\Sales\SaleController;
+use App\Http\Controllers\Sale\SaleController;
 use App\Http\Resources\UserResource;
+use App\Models\Sale;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
