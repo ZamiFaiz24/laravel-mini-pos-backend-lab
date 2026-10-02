@@ -49,7 +49,7 @@ test('password can be reset with valid token', function () {
         $response = $this->post('/reset-password', [
             'token' => $notification->token,
             'email' => $user->email,
-            'password' => 'password',
+            'password' => 'password123',
             'password_confirmation' => 'password',
         ]);
 
